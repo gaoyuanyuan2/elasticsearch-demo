@@ -130,5 +130,18 @@ public class FlightsService {
         return resp;
     }
 
-
+    /**
+     * 分组统计 group by buyer,supplier,orderType
+     *
+     * @return 分组条件组装
+     */
+    public TermsAggregationBuilder getOrderCountAggregationBuilder() {
+        TermsAggregationBuilder orderTypeGroup = AggregationBuilders.terms("orderType")
+                .field("orderType");
+        TermsAggregationBuilder supplierGroup = AggregationBuilders.terms("supplier")
+                .field("supplier").subAggregation(orderTypeGroup);
+        TermsAggregationBuilder buyerGroup = AggregationBuilders.terms("buyer")
+                .field("buyer").subAggregation(supplierGroup);
+        return buyerGroup;
+    }
 }
