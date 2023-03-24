@@ -132,15 +132,16 @@ public class FlightsService {
 
     /**
      * 分组统计 group by buyer,supplier,orderType
-     *
+     * size 要传值 否则默认是10 少数据。
+     * https://blog.csdn.net/qq_43299794/article/details/102776264
      * @return 分组条件组装
      */
     public TermsAggregationBuilder getOrderCountAggregationBuilder() {
-        TermsAggregationBuilder orderTypeGroup = AggregationBuilders.terms("orderType")
+        TermsAggregationBuilder orderTypeGroup = AggregationBuilders.terms("orderType").size(1000)
                 .field("orderType");
-        TermsAggregationBuilder supplierGroup = AggregationBuilders.terms("supplier")
+        TermsAggregationBuilder supplierGroup = AggregationBuilders.terms("supplier").size(1000)
                 .field("supplier").subAggregation(orderTypeGroup);
-        TermsAggregationBuilder buyerGroup = AggregationBuilders.terms("buyer")
+        TermsAggregationBuilder buyerGroup = AggregationBuilders.terms("buyer").size(1000)
                 .field("buyer").subAggregation(supplierGroup);
         return buyerGroup;
     }
